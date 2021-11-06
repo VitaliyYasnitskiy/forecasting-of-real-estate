@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Расчет стоимости квартиры</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=5c108f36-3345-4799-9239-732d3482395e&lang=ru_RU" type="text/javascript"></script>
+    <style>
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #c1c1c1 !important;
+            opacity: 1; /* Firefox */
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #c1c1c1 !important;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            color: #c1c1c1 !important;
+        }
+    </style>
+</head>
+<body class="bg-light mb-4">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="en.html">English version</a>
+            <div class="py-3 text-center">
+                <h1>Оценка стоимости квартиры</h1>
+            </div>
+            <form action="#" method="post" id="form">
+                <div class="form-group">
+                    <label for="city">Выберите город</label>
+                    <select class="form-control" id="city" name="city">
+                        <option value="1">Екатеринбург</option>
+                        <option value="2">Пермь</option>
+                        <option value="3">Казань</option>
+                        <option value="4">Новосибирск</option>
+                        <option value="5">Челябинск</option>
+                        <option value="6">Москва</option>
+                        <option value="7">Санкт-Петербург</option>
+                        <option value="8">Нижний Новгород</option>
+                        <option value="9">Пятигорск</option>
+                        <option value="10">Ростов-на-Дону</option>
+                        <option value="11">Хабаровск</option>
+                        <option value="12">Пенза</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div id="map" style="width: 100%; height: 400px"></div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="address">Введите адрес для получения координат</label>
+                            <input type="text" class="form-control" id="address">
+                            <button class="btn btn-primary btn-sm" id="getCoords" type="button">Получить координаты</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lat">Широта</label>
+                            <input type="text" class="form-control" min="44" max="61" id="lat" name="lat" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lon">Долгота</label>
+                            <input type="text" class="form-control" min="29" max="136" id="lon" name="lon" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wallType">Тип стен</label>
+                    <select id="wallType" name="wallType" class="form-control">
+                        <option value="7">кирпич</option>
+                        <option value="6">панель</option>
+                        <option value="5">газобетон</option>
+                        <option value="4">монолит</option>
+                        <option value="3">дерево</option>
+                        <option value="2">шлакоблок</option>
+                        <option value="1">блочный</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                                <label for="roomCount">Количество комнат</label>
+                            <input type="number" min="1" max="5" id="roomCount" name="roomCount" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="floor">Этаж</label>
+                            <input type="number" min="1" max="45" id="floor" name="floor" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="floorTotal">Всего этажей</label>
+                            <input type="number" min="1" max="45" id="floorTotal" name="floorTotal" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="totalArea">Общая площадь в м<sup>2</sup></label>
+                            <input type="number" min="1" max="200" step="0.01" id="totalArea" name="totalArea" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="livingArea">Жилая площадь в м<sup>2</sup></label>
+                            <input type="number" min="1" max="200" step="0.01" id="livingArea" name="livingArea" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="kitchenArea">Площадь кухни в м<sup>2</sup></label>
+                            <input type="number" min="1" max="90" step="0.01" id="kitchenArea" name="kitchenArea" class="form-control"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="season">Время года, для которого производится расчет</label>
+                            <select id="season" name="season" class="form-control">
+                                <option value="1">Зима</option>
+                                <option value="2">Весна</option>
+                                <option value="3">Лето</option>
+                                <option value="4">Осень</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="year">Год</label>
+                            <input type="number" class="form-control" min="2006" max="2025" id="year" name="year" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="dollarRate">Курс доллара в рублях</label>
+                            <input type="number" min="24" max="80" step="0.01" id="dollarRate" name="dollarRate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="brentRate">Курс нефти марки Brent в рублях</label>
+                            <input type="number" min="1440" max="3850" step="0.0001" id="brentRate" name="brentRate" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="GNP">ВВП в текущих ценах в млрд. руб.</label>
+                            <input type="number" min="26900" max="110000" step="0.1" id="GNP" name="GNP" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="newHouses">Ввод жилья за прошлый год в тыс. кв.м.</label>
+                            <input type="number" min="300" max="5100" step="0.001" id="newHouses" name="newHouses" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="mortgage">Ипотечные кредиты за прошлый год в млн. руб.</label>
+                            <input type="number" min="2500" max="390000" id="mortgage" name="mortgage" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 id="valueWrapper" style="display: none;">Рассчитанная стоимость = <span id="calcValue"></span>
+                    млн. руб.</h1>
+
+                <button class="btn btn-primary" type="button" id="calcButton">Рассчитать</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $.getScript('app.js')
+</script>
+</body>
+</html>

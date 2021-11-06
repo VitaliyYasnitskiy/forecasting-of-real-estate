@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Real estate valuation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=5c108f36-3345-4799-9239-732d3482395e&lang=en_GB" type="text/javascript"></script>
+    <style>
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #c1c1c1 !important;
+            opacity: 1; /* Firefox */
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #c1c1c1 !important;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            color: #c1c1c1 !important;
+        }
+    </style>
+</head>
+<body class="bg-light mb-4">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="index.html">Русская версия</a>
+            <div class="py-3 text-center">
+                <h1>Real estate valuation</h1>
+            </div>
+            <form action="#" method="post" id="form">
+                <div class="form-group">
+                    <label for="city">Select a city</label>
+                    <select class="form-control" id="city" name="city">
+                        <option value="1">Yekaterinburg</option>
+                        <option value="2">Perm</option>
+                        <option value="3">Kazan</option>
+                        <option value="4">Novosibirsk</option>
+                        <option value="5">Chelyabinsk</option>
+                        <option value="6">Moscow</option>
+                        <option value="7">Saint Petersburg</option>
+                        <option value="8">Nizhny Novgorod</option>
+                        <option value="9">Pyatigorsk</option>
+                        <option value="10">Rostov-on-Don</option>
+                        <option value="11">Khabarovsk</option>
+                        <option value="12">Penza</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div id="map" style="width: 100%; height: 400px"></div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="address">Enter an address to get the coordinates</label>
+                            <input type="text" class="form-control" id="address">
+                            <button class="btn btn-primary btn-sm" id="getCoords" type="button">Get the coordinates</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lat">Latitude</label>
+                            <input type="text" class="form-control" min="44" max="61" id="lat" name="lat" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lon">Lontitude</label>
+                            <input type="text" class="form-control" min="29" max="136" id="lon" name="lon" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wallType">Wall type</label>
+                    <select id="wallType" name="wallType" class="form-control">
+                        <option value="7">brick</option>
+                        <option value="6">panel</option>
+                        <option value="5">aerated concrete</option>
+                        <option value="4">monolithic</option>
+                        <option value="3">wooden</option>
+                        <option value="2">cinder block</option>
+                        <option value="1">block</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                                <label for="roomCount">Rooms</label>
+                            <input type="number" min="1" max="5" id="roomCount" name="roomCount" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="floor">Floor</label>
+                            <input type="number" min="1" max="45" id="floor" name="floor" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="floorTotal">Total floors</label>
+                            <input type="number" min="1" max="45" id="floorTotal" name="floorTotal" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="totalArea">Total area in m<sup>2</sup></label>
+                            <input type="number" min="1" max="200" step="0.01" id="totalArea" name="totalArea" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="livingArea">Living area in m<sup>2</sup></label>
+                            <input type="number" min="1" max="200" step="0.01" id="livingArea" name="livingArea" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="kitchenArea">Kitchen area in m<sup>2</sup></label>
+                            <input type="number" min="1" max="90" step="0.01" id="kitchenArea" name="kitchenArea" class="form-control"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="season">The time of year for which the calculation is made</label>
+                            <select id="season" name="season" class="form-control">
+                                <option value="1">Winter</option>
+                                <option value="2">Spring</option>
+                                <option value="3">Summer</option>
+                                <option value="4">Fall</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <input type="number" class="form-control" min="2006" max="2025" id="year" name="year" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="dollarRate">Dollar exchange rate in rubles</label>
+                            <input type="number" min="23" max="80" step="0.01" id="dollarRate" name="dollarRate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="brentRate">Brent oil exchange rate in rubles</label>
+                            <input type="number" min="1440" max="3850" step="0.0001" id="brentRate" name="brentRate" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="GNP">GDP at current prices in billion rubles</label>
+                            <input type="number" min="26900" max="110000" step="0.1" id="GNP" name="GNP" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="newHouses">Commissioning of housing for the past year in thousand sq. m.</label>
+                            <input type="number" min="300" max="5100" step="0.001" id="newHouses" name="newHouses" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="mortgage">Mortgage loans for the past year in millions of rubles</label>
+                            <input type="number" min="2500" max="390000" id="mortgage" name="mortgage" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 id="valueWrapper" style="display: none;">The calculated value = <span id="calcValue"></span>
+                    million rubles</h1>
+
+                <button class="btn btn-primary" type="button" id="calcButton">Calculated</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $.getScript('app.js')
+</script>
+</body>
+</html>
